@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard | Makeup By Intan Berlianda</title>
+    <link rel="icon" href="favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="css/admin.css" />
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-bg">
+    <div class="login-particles"></div>
+  </div>
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="logo-glyph">✦</div>
+      <div class="login-brand">Makeup By Intan Berlianda</div>
+      <div class="login-sub">Admin Dashboard</div>
+    </div>
+    <form id="loginForm" novalidate>
+      <div class="form-group">
+        <label><i class="fas fa-user"></i> Username</label>
+        <input type="text" id="loginUser" placeholder="Username" autocomplete="username" />
+      </div>
+      <div class="form-group">
+        <label><i class="fas fa-lock"></i> Password</label>
+        <div class="pw-wrap">
+          <input type="password" id="loginPass" placeholder="Password" autocomplete="current-password" />
+          <button type="button" class="pw-toggle" id="pwToggle"><i class="fas fa-eye"></i></button>
+        </div>
+      </div>
+      <div id="loginError" class="login-error" style="display:none"></div>
+      <button type="submit" class="btn-login">
+        <i class="fas fa-sign-in-alt"></i> Masuk
+      </button>
+    </form>
+    <a href="index.html" class="back-site"><i class="fas fa-arrow-left"></i> Kembali ke Website</a>
+  </div>
+</div>
+
+<!-- ADMIN DASHBOARD -->
+<div class="admin-layout" id="adminLayout" style="display:none">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <span class="logo-glyph">✦</span>
+        <div class="sidebar-brand">
+          <span class="sb-title">Intan Berlianda</span>
+          <span class="sb-sub">Admin Panel</span>
+        </div>
+      </div>
+      <button class="sidebar-close" id="sidebarClose"><i class="fas fa-times"></i></button>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-title">Menu Utama</div>
+      <a href="#" class="sidebar-item active" data-page="dashboard"><i class="fas fa-chart-line"></i> Dashboard</a>
+      <a href="#" class="sidebar-item" data-page="bookings"><i class="fas fa-calendar-check"></i> Kelola Booking</a>
+      <a href="#" class="sidebar-item" data-page="calendar"><i class="fas fa-calendar-alt"></i> Kalender Jadwal</a>
+      <div class="nav-section-title">Konten</div>
+      <a href="#" class="sidebar-item" data-page="gallery"><i class="fas fa-images"></i> Kelola Galeri</a>
+      <a href="#" class="sidebar-item" data-page="pricelist"><i class="fas fa-tag"></i> Kelola Pricelist</a>
+      <a href="#" class="sidebar-item" data-page="testimonials"><i class="fas fa-star"></i> Kelola Testimoni</a>
+      <div class="nav-section-title">Sistem</div>
+      <a href="#" class="sidebar-item" data-page="settings"><i class="fas fa-cog"></i> Pengaturan</a>
+      <a href="index.html" class="sidebar-item" target="_blank"><i class="fas fa-external-link-alt"></i> Lihat Website</a>
+      <a href="#" class="sidebar-item logout-item" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </nav>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="admin-main" id="adminMain">
+    <!-- TOP BAR -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="sidebar-toggle" id="sidebarToggle"><i class="fas fa-bars"></i></button>
+        <div class="topbar-title" id="topbarTitle">Dashboard</div>
+      </div>
+      <div class="topbar-right">
+        <button class="theme-toggle-admin" id="adminThemeToggle"><i class="fas fa-moon" id="adminThemeIcon"></i></button>
+        <div class="admin-profile">
+          <div class="profile-avatar">A</div>
+          <span id="adminUsername">Admin</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- PAGE CONTENT -->
+    <div class="page-content">
+
+      <!-- DASHBOARD PAGE -->
+      <div class="admin-page active" id="page-dashboard">
+        <div class="stats-grid">
+          <div class="stat-card primary">
+            <div class="stat-icon"><i class="fas fa-calendar-check"></i></div>
+            <div class="stat-info">
+              <div class="stat-value" id="statTotal">0</div>
+              <div class="stat-label">Total Booking</div>
+            </div>
+            <div class="stat-trend up"><i class="fas fa-arrow-up"></i></div>
+          </div>
+          <div class="stat-card warning">
+            <div class="stat-icon"><i class="fas fa-clock"></i></div>
+            <div class="stat-info">
+              <div class="stat-value" id="statPending">0</div>
+              <div class="stat-label">Menunggu</div>
+            </div>
+          </div>
+          <div class="stat-card success">
+            <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+            <div class="stat-info">
+              <div class="stat-value" id="statDone">0</div>
+              <div class="stat-label">Selesai</div>
+            </div>
+          </div>
+          <div class="stat-card rose">
+            <div class="stat-icon"><i class="fas fa-money-bill-wave"></i></div>
+            <div class="stat-info">
+              <div class="stat-value" id="statRevenue">Rp 0</div>
+              <div class="stat-label">Est. Pendapatan</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard-row">
+          <div class="chart-card">
+            <div class="card-header">
+              <h3>Statistik Booking</h3>
+              <select id="chartPeriod" onchange="updateChart()">
+                <option value="weekly">Mingguan</option>
+                <option value="monthly">Bulanan</option>
+              </select>
+            </div>
+            <canvas id="bookingChart" height="120"></canvas>
+          </div>
+          <div class="donut-card">
+            <div class="card-header"><h3>Status Booking</h3></div>
+            <canvas id="statusChart" height="200"></canvas>
+            <div class="donut-legend" id="donutLegend"></div>
+          </div>
+        </div>
+
+        <div class="recent-bookings-card">
+          <div class="card-header">
+            <h3>Booking Terbaru</h3>
+            <button class="btn-sm" onclick="showPage('bookings')">Lihat Semua</button>
+          </div>
+          <div class="table-wrap">
+            <table class="data-table" id="recentBookingsTable">
+              <thead>
+                <tr><th>Kode</th><th>Nama</th><th>Layanan</th><th>Tanggal</th><th>Status</th><th>Aksi</th></tr>
+              </thead>
+              <tbody id="recentBookingsTbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- BOOKINGS PAGE -->
+      <div class="admin-page" id="page-bookings">
+        <div class="page-toolbar">
+          <div class="toolbar-left">
+            <input type="text" id="bookingSearch" placeholder="Cari booking..." class="search-input" oninput="filterBookings()" />
+            <select id="bookingFilter" onchange="filterBookings()">
+              <option value="">Semua Status</option>
+              <option value="Menunggu">Menunggu</option>
+              <option value="Diproses">Diproses</option>
+              <option value="Disetujui">Disetujui</option>
+              <option value="Selesai">Selesai</option>
+              <option value="Ditolak">Ditolak</option>
+            </select>
+          </div>
+          <div class="toolbar-right">
+            <button class="btn-export" onclick="exportBookings()"><i class="fas fa-download"></i> Export JSON</button>
+            <button class="btn-import" onclick="document.getElementById('importFile').click()"><i class="fas fa-upload"></i> Import</button>
+            <input type="file" id="importFile" accept=".json" style="display:none" onchange="importBookings(event)" />
+            <button class="btn-add" onclick="openAddBooking()"><i class="fas fa-plus"></i> Tambah Booking</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table class="data-table" id="bookingsTable">
+            <thead>
+              <tr><th>Kode</th><th>Nama</th><th>WA</th><th>Layanan</th><th>Tanggal</th><th>Jam</th><th>Lokasi</th><th>Status</th><th>Aksi</th></tr>
+            </thead>
+            <tbody id="bookingsTbody"></tbody>
+          </table>
+        </div>
+        <div class="pagination" id="bookingsPagination"></div>
+      </div>
+
+      <!-- CALENDAR PAGE -->
+      <div class="admin-page" id="page-calendar">
+        <div class="calendar-wrap">
+          <div class="calendar-header">
+            <button onclick="prevMonth()"><i class="fas fa-chevron-left"></i></button>
+            <h3 id="calTitle"></h3>
+            <button onclick="nextMonth()"><i class="fas fa-chevron-right"></i></button>
+          </div>
+          <div class="calendar-grid" id="calendarGrid"></div>
+          <div class="calendar-legend">
+            <span class="legend-item"><span class="dot pending"></span> Menunggu</span>
+            <span class="legend-item"><span class="dot approved"></span> Disetujui</span>
+            <span class="legend-item"><span class="dot done"></span> Selesai</span>
+          </div>
+        </div>
+        <div class="day-detail" id="dayDetail" style="display:none">
+          <h3 id="dayDetailTitle">Jadwal</h3>
+          <div id="dayDetailList"></div>
+        </div>
+      </div>
+
+      <!-- GALLERY PAGE -->
+      <div class="admin-page" id="page-gallery">
+        <div class="page-toolbar">
+          <div class="toolbar-left"><h3>Kelola Galeri</h3></div>
+          <div class="toolbar-right">
+            <button class="btn-add" onclick="openAddGallery()"><i class="fas fa-plus"></i> Tambah Foto</button>
+          </div>
+        </div>
+        <div class="gallery-admin-grid" id="galleryAdminGrid"></div>
+      </div>
+
+      <!-- PRICELIST PAGE -->
+      <div class="admin-page" id="page-pricelist">
+        <div class="page-toolbar">
+          <div class="toolbar-left"><h3>Kelola Pricelist</h3></div>
+          <div class="toolbar-right">
+            <button class="btn-add" onclick="openAddPrice()"><i class="fas fa-plus"></i> Tambah Layanan</button>
+          </div>
+        </div>
+        <div class="price-admin-grid" id="priceAdminGrid"></div>
+      </div>
+
+      <!-- TESTIMONIALS PAGE -->
+      <div class="admin-page" id="page-testimonials">
+        <div class="page-toolbar">
+          <div class="toolbar-left"><h3>Kelola Testimoni</h3></div>
+          <div class="toolbar-right">
+            <button class="btn-add" onclick="openAddTestimonial()"><i class="fas fa-plus"></i> Tambah Testimoni</button>
+          </div>
+        </div>
+        <div class="testi-admin-grid" id="testiAdminGrid"></div>
+      </div>
+
+      <!-- SETTINGS PAGE -->
+      <div class="admin-page" id="page-settings">
+        <div class="settings-grid">
+          <div class="settings-card">
+            <h3><i class="fas fa-user-shield"></i> Ubah Kredensial Login</h3>
+            <form id="changeCredForm">
+              <div class="form-group">
+                <label>Username Baru</label>
+                <input type="text" id="newUsername" placeholder="Username baru" />
+              </div>
+              <div class="form-group">
+                <label>Password Baru</label>
+                <input type="password" id="newPassword" placeholder="Password baru" />
+              </div>
+              <div class="form-group">
+                <label>Konfirmasi Password</label>
+                <input type="password" id="confirmPassword" placeholder="Ulangi password" />
+              </div>
+              <button type="submit" class="btn-save">Simpan Perubahan</button>
+            </form>
+          </div>
+          <div class="settings-card">
+            <h3><i class="fas fa-paint-brush"></i> Pengaturan Tema</h3>
+            <div class="theme-options">
+              <label class="theme-opt">
+                <input type="radio" name="themeColor" value="pink" checked onchange="changeThemeColor(this.value)" />
+                <span class="color-swatch pink"></span> Pink (Default)
+              </label>
+              <label class="theme-opt">
+                <input type="radio" name="themeColor" value="rose" onchange="changeThemeColor(this.value)" />
+                <span class="color-swatch rose"></span> Rose Gold
+              </label>
+              <label class="theme-opt">
+                <input type="radio" name="themeColor" value="nude" onchange="changeThemeColor(this.value)" />
+                <span class="color-swatch nude"></span> Nude
+              </label>
+            </div>
+            <div class="toggle-row">
+              <span>Dark Mode</span>
+              <label class="toggle-switch">
+                <input type="checkbox" id="settingsDarkMode" onchange="toggleAdminDark(this)" />
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+          <div class="settings-card">
+            <h3><i class="fas fa-phone"></i> Informasi Kontak</h3>
+            <form id="contactInfoForm">
+              <div class="form-group">
+                <label>Nomor WhatsApp</label>
+                <input type="tel" id="settingsWa" value="085692804808" />
+              </div>
+              <div class="form-group">
+                <label>Instagram Handle</label>
+                <input type="text" id="settingsIg" value="@berlianmakeup" />
+              </div>
+              <div class="form-group">
+                <label>Lokasi</label>
+                <input type="text" id="settingsLoc" value="Bekasi, Jawa Barat" />
+              </div>
+              <button type="submit" class="btn-save">Simpan</button>
+            </form>
+          </div>
+          <div class="settings-card danger-zone">
+            <h3><i class="fas fa-exclamation-triangle"></i> Zona Berbahaya</h3>
+            <p>Tindakan ini tidak dapat dibatalkan.</p>
+            <button class="btn-danger" onclick="resetAllData()">Reset Semua Data Booking</button>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end page-content -->
+  </main>
+</div><!-- end admin-layout -->
+
+<!-- BOOKING MODAL (ADD/EDIT) -->
+<div class="modal" id="bookingEditModal">
+  <div class="modal-overlay" onclick="closeModal('bookingEditModal')"></div>
+  <div class="modal-content large">
+    <div class="modal-header">
+      <h3 id="bookingModalTitle">Tambah Booking</h3>
+      <button onclick="closeModal('bookingEditModal')" class="modal-x"><i class="fas fa-times"></i></button>
+    </div>
+    <form id="adminBookingForm">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Nama *</label>
+          <input type="text" id="ab_name" required />
+        </div>
+        <div class="form-group">
+          <label>WhatsApp *</label>
+          <input type="tel" id="ab_wa" required />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Tanggal *</label>
+          <input type="date" id="ab_date" required />
+        </div>
+        <div class="form-group">
+          <label>Jam</label>
+          <input type="time" id="ab_time" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Jenis Makeup *</label>
+          <select id="ab_type" required>
+            <option value="">Pilih...</option>
+            <option>Lamaran</option><option>Wisuda</option><option>Bridesmaid</option>
+            <option>Birthday Party</option><option>Prewedding</option><option>Pendamping Wisuda</option>
+            <option>Photoshoot</option><option>Akad</option><option>Resepsi</option>
+            <option>Kondangan</option><option>Terima Tamu</option><option>Hair Do Hijab</option><option>Lainnya</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Status</label>
+          <select id="ab_status">
+            <option value="Menunggu">Menunggu</option>
+            <option value="Diproses">Diproses</option>
+            <option value="Disetujui">Disetujui</option>
+            <option value="Selesai">Selesai</option>
+            <option value="Ditolak">Ditolak</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Lokasi</label>
+        <input type="text" id="ab_location" />
+      </div>
+      <div class="form-group">
+        <label>Estimasi Harga (Rp)</label>
+        <input type="number" id="ab_price" placeholder="0" />
+      </div>
+      <div class="form-group">
+        <label>Catatan</label>
+        <textarea id="ab_note" rows="3"></textarea>
+      </div>
+      <input type="hidden" id="ab_id" />
+      <div class="form-actions">
+        <button type="button" onclick="closeModal('bookingEditModal')" class="btn-outline">Batal</button>
+        <button type="submit" class="btn-save">Simpan</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- GALLERY ADD/EDIT MODAL -->
+<div class="modal" id="galleryModal">
+  <div class="modal-overlay" onclick="closeModal('galleryModal')"></div>
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 id="galleryModalTitle">Tambah Foto</h3>
+      <button onclick="closeModal('galleryModal')" class="modal-x"><i class="fas fa-times"></i></button>
+    </div>
+    <form id="galleryForm">
+      <div class="form-group">
+        <label>URL Gambar</label>
+        <input type="url" id="gal_url" placeholder="https://..." />
+      </div>
+      <div class="form-group">
+        <label>Atau Upload Gambar</label>
+        <input type="file" id="gal_file" accept="image/*" onchange="previewGalFile(event)" />
+      </div>
+      <div id="gal_preview" class="img-preview"></div>
+      <div class="form-group">
+        <label>Judul / Keterangan</label>
+        <input type="text" id="gal_caption" placeholder="Makeup Wisuda..." />
+      </div>
+      <div class="form-group">
+        <label>Kategori</label>
+        <select id="gal_cat">
+          <option value="all">Semua</option>
+          <option value="lamaran">Lamaran</option>
+          <option value="wisuda">Wisuda</option>
+          <option value="pengantin">Pengantin</option>
+          <option value="party">Party</option>
+        </select>
+      </div>
+      <input type="hidden" id="gal_id" />
+      <div class="form-actions">
+        <button type="button" onclick="closeModal('galleryModal')" class="btn-outline">Batal</button>
+        <button type="submit" class="btn-save">Simpan</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- PRICE ADD/EDIT MODAL -->
+<div class="modal" id="priceModal">
+  <div class="modal-overlay" onclick="closeModal('priceModal')"></div>
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 id="priceModalTitle">Tambah Layanan</h3>
+      <button onclick="closeModal('priceModal')" class="modal-x"><i class="fas fa-times"></i></button>
+    </div>
+    <form id="priceForm">
+      <div class="form-group">
+        <label>Nama Layanan *</label>
+        <input type="text" id="pr_name" required />
+      </div>
+      <div class="form-group">
+        <label>Harga *</label>
+        <input type="text" id="pr_price" placeholder="Rp 500.000" required />
+      </div>
+      <div class="form-group">
+        <label>Icon (emoji)</label>
+        <input type="text" id="pr_icon" placeholder="💄" maxlength="5" />
+      </div>
+      <div class="form-group">
+        <label>Deskripsi</label>
+        <textarea id="pr_desc" rows="2" placeholder="Deskripsi singkat layanan..."></textarea>
+      </div>
+      <div class="form-group">
+        <label>Tag (cth: Popular, New)</label>
+        <input type="text" id="pr_tag" placeholder="Popular" />
+      </div>
+      <input type="hidden" id="pr_id" />
+      <div class="form-actions">
+        <button type="button" onclick="closeModal('priceModal')" class="btn-outline">Batal</button>
+        <button type="submit" class="btn-save">Simpan</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- TESTIMONIAL ADD/EDIT MODAL -->
+<div class="modal" id="testiModal">
+  <div class="modal-overlay" onclick="closeModal('testiModal')"></div>
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 id="testiModalTitle">Tambah Testimoni</h3>
+      <button onclick="closeModal('testiModal')" class="modal-x"><i class="fas fa-times"></i></button>
+    </div>
+    <form id="testiForm">
+      <div class="form-group">
+        <label>Nama Klien *</label>
+        <input type="text" id="te_name" required />
+      </div>
+      <div class="form-group">
+        <label>Layanan</label>
+        <input type="text" id="te_service" placeholder="Makeup Wisuda" />
+      </div>
+      <div class="form-group">
+        <label>Rating (1-5)</label>
+        <input type="number" id="te_rating" min="1" max="5" value="5" />
+      </div>
+      <div class="form-group">
+        <label>Testimoni *</label>
+        <textarea id="te_text" rows="4" required></textarea>
+      </div>
+      <div class="form-group">
+        <label>Avatar URL (opsional)</label>
+        <input type="url" id="te_avatar" placeholder="https://..." />
+      </div>
+      <input type="hidden" id="te_id" />
+      <div class="form-actions">
+        <button type="button" onclick="closeModal('testiModal')" class="btn-outline">Batal</button>
+        <button type="submit" class="btn-save">Simpan</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- BOOKING DETAIL MODAL -->
+<div class="modal" id="detailModal">
+  <div class="modal-overlay" onclick="closeModal('detailModal')"></div>
+  <div class="modal-content large">
+    <div class="modal-header">
+      <h3>Detail Booking</h3>
+      <button onclick="closeModal('detailModal')" class="modal-x"><i class="fas fa-times"></i></button>
+    </div>
+    <div id="detailContent"></div>
+    <div class="form-actions">
+      <button onclick="closeModal('detailModal')" class="btn-outline">Tutup</button>
+      <button onclick="printInvoice()" class="btn-save"><i class="fas fa-print"></i> Print Invoice</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="js/admin.js"></script>
+</body>
+</html>
